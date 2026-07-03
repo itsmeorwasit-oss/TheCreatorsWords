@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The True Void</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000000;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .void-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            background-image: 
+                radial-gradient(1px 1px at 10% 20%, #ffffff, transparent),
+                radial-gradient(1.5px 1.5px at 20% 30%, #ffffff, transparent),
+                radial-gradient(1px 1px at 30% 10%, #ffffff, transparent),
+                radial-gradient(2px 2px at 40% 70%, #ffffff, transparent),
+                radial-gradient(1px 1px at 50% 40%, #ffffff, transparent),
+                radial-gradient(1.5px 1.5px at 60% 80%, #ffffff, transparent),
+                radial-gradient(1px 1px at 70% 20%, #ffffff, transparent),
+                radial-gradient(2px 2px at 80% 60%, #ffffff, transparent),
+                radial-gradient(1px 1px at 90% 10%, #ffffff, transparent),
+                radial-gradient(1.5px 1.5px at 95% 90%, #ffffff, transparent),
+                radial-gradient(1px 1px at 15% 85%, #ffffff, transparent),
+                radial-gradient(2px 2px at 25% 55%, #ffffff, transparent),
+                radial-gradient(1px 1px at 35% 95%, #ffffff, transparent),
+                radial-gradient(1.5px 1.5px at 45% 15%, #ffffff, transparent),
+                radial-gradient(1px 1px at 65% 35%, #ffffff, transparent),
+                radial-gradient(2px 2px at 75% 75%, #ffffff, transparent),
+                radial-gradient(1px 1px at 85% 45%, #ffffff, transparent);
+            background-size: 300px 300px;
+            opacity: 0.9;
+        }
+
+        .message-box {
+            position: relative;
+            z-index: 2;
+            width: 90%;
+            max-width: 650px;
+            min-height: 170px;
+            padding: 35px;
+            background: rgba(10, 10, 15, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .text-display {
+            color: #f3f4f6;
+            font-size: 1.35rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            background-color: #ffffff;
+            margin-left: 5px;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .info-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(20, 20, 25, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px rgba(255,255,255,0.05);
+        }
+        .info-btn:hover {
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 20;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: rgba(10, 10, 15, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 85%;
+            max-width: 800px;
+            max-height: 80vh;
+            border-radius: 12px;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            color: #d1d5db;
+            line-height: 1.8;
+            font-size: 1rem;
+            text-align: left;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            font-size: 1.5rem;
+            cursor: pointer;
+            font-family: monospace;
+        }
+        .close-btn:hover {
+            color: #ffffff;
+        }
+
+        .modal-title {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .modal-content p {
+            margin-bottom: 20px;
+            text-indent: 20px;
+        }
+
+        .modal-footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+        .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="void-bg"></div>
+
+    <button class="info-btn" id="open">!</button>
+
+    <div class="message-box">
+        <div class="text-display"><span id="box"></span><span class="cursor">&nbsp;</span></div>
+    </div>
+
+    <div class="modal" id="popup">
+        <div class="modal-content">
+            <button class="close-btn" id="close">X</button>
+            <div class="modal-title">The Creator's Story</div>
+            <div id="story"></div>
+            <div class="modal-footer">made by thegamemaster09.</div>
+        </div>
+    </div>
+
+    <script>
+        const structures = [
+            ["determiners", "adjectives", "nouns", "verbs", "adverbs"],
+            ["determiners", "nouns", "verbs", "determiners", "adjectives", "nouns"],
+            ["adjectives", "nouns", "verbs", "prepositions", "determiners", "nouns"],
+            ["nouns", "adverbs", "verbs", "prepositions", "adjectives", "nouns"],
+            ["determiners", "adjectives", "nouns", "adverbs", "verbs"],
+            ["prepositions", "determiners", "adjectives", "nouns", "determiners", "nouns", "verbs"],
+            ["determiners", "adjectives", "nouns", "verbs", "prepositions", "adjectives", "nouns"],
+            ["adjectives", "nouns", "adverbs", "verbs", "prepositions", "nouns"]
+        ];
+
+        const words = {
+            determiners: [
+                "the", "a", "that", "every", "some", "our", "their", "this", "an", "no", 
+                "each", "any", "one", "the last", "a forgotten", "some corrupted", "a mythical",
+                "the dynamic", "that glitching", "an immortal", "the wandering", "a spectral",
+                "another", "the supreme", "some synthetic", "an artificial", "the terminal",
+                "a microscopic", "the parallel", "a localized", "the primordial", "any dormant",
+                "that legendary", "our shattered", "their unholy", "the hidden", "some structural",
+                "an ultimate", "every ghosted", "a radioactive", "the system-wide", "that volatile"
+            ],
+            adjectives: [
+                "silent", "glowing", "infinite", "forgotten", "cosmic", "shadowy", "ancient", 
+                "vibrant", "whispering", "frozen", "hollow", "distant", "shattering", "eternal", 
+                "invisible", "starlit", "corrupted", "abyssal", "synthetic", "unseen", "bleak", 
+                "timeless", "fractured", "radiant", "ghostly", "weightless", "burning", "colossal",
+                "cybernetic", "radioactive", "supermassive", "hyperbolic", "interstellar", "doomed",
+                "hallucinating", "static", "glitched", "nebular", "subatomic", "cryptic", "magnetic",
+                "plasma-infused", "gothic", "astral", "quantum", "celestial", "obsidian", "spectral",
+                "volatile", "dimensional", "dark-matter", "catastrophic", "metallic", "enchanted",
+                "renegade", "subterranean", "kinetic", "cryptographic", "monolithic", "stochastic",
+                "flickering", "endless", "automated", "vectorized", "subconscious", "chaotic",
+                "spectral", "overloaded", "dystopian", "gargantuan", "microscopic", "neolithic",
+                "primordial", "thermonuclear", "unstable", "analog", "biometric", "atmospheric"
+            ],
+            nouns: [
+                "void", "star", "nebula", "galaxy", "dreamer", "shadow", "whisper", "echo", 
+                "comet", "astronaut", "computer", "portal", "singularity", "horizon", "dust", 
+                "matrix", "signal", "memory", "paradox", "algorithm", "frequency", "specter", 
+                "core", "illusion", "eclipse", "satellite", "debris", "universe", "tomb", "quasar",
+                "pulsar", "supernova", "black hole", "android", "simulation", "cosmonaut", "beacon",
+                "mainframe", "dimension", "anomaly", "warp drive", "constellation", "exoplanet",
+                "vortex", "oracle", "monolith", "golem", "prototype", "hologram", "nexus", "cradle",
+                "entity", "cypher", "engine", "spectrogram", "nanobot", "chronometer", "stranger",
+                "manuscript", "sentinel", "transistor", "transmitter", "glitch", "nucleus", "phenomenon",
+                "terminal", "cipher", "blueprint", "spectacle", "generator", "artifact", "mechanism",
+                "transmitter", "receiver", "catalyst", "node", "network", "interface", "supercomputer"
+            ],
+            verbs: [
+                "collides with", "floats past", "creates", "destroys", "watches", "hides inside", 
+                "dances with", "escapes", "illuminates", "swallows", "summons", "deletes", 
+                "absorbs", "mimics", "shatters", "haunts", "infects", "observes", "ignites", 
+                "dissolves", "breathes into", "navigates", "reboots", "bypasses", "transforms",
+                "manipulates", "corrupts", "intercepts", "accelerates", "paralyzes", "rewrites",
+                "harvests", "evaporates", "transcends", "crystallizes", "fractures", "teleports into",
+                "reconfigures", "deconstructs", "weaponizes", "anchors", "neutralizes", "materializes",
+                "predicts", "simulates", "encrypts", "extinguishes", "duplicates", "awakens",
+                "scans", "overrides", "terminates", "evokes", "disintegrates", "reanimates",
+                "vaporizes", "channelizes", "modulates", "amplifies", "scrambles", "sabotages"
+            ],
+            adverbs: [
+                "silently", "slowly", "eternally", "brilliantly", "secretly", "chaotically", 
+                "patiently", "violently", "blindly", "automatically", "gracefully", "bitterly", 
+                "randomly", "darkly", "perfectly", "endlessly", "quietly", "maliciously", 
+                "spontaneously", "hypnotically", "mathematically", "mysteriously", "abruptly",
+                "hazardously", "ironically", "subconsciously", "industrially", "cosmically",
+                "implicitly", "technically", "deliberately", "unpredictably", "artificially",
+                "systematically", "defiantally", "mechanically", "instantly", "logically", "fatally"
+            ],
+            prepositions: [
+                "above", "beneath", "beyond", "through", "towards", "inside of", "without", 
+                "against", "deep within", "alongside", "far outside", "into", "on top of",
+                "underneath", "hidden behind", "orbiting around", "drifting near", "encased within",
+                "suspended over", "bleeding into", "trapped inside", "generated by", "fused with",
+                "submerged in", "extracted from", "locked inside", "scattered across", "intertwined with"
+            ]
+        };
+
+        const display = document.getElementById("box");
+        let timer;
+        let storyCache = "";
+
+        function pickWord(type) {
+            const pool = words[type];
+            return pool[Math.floor(Math.random() * pool.length)];
+        }
+
+        function create() {
+            const structure = structures[Math.floor(Math.random() * structures.length)];
+            let array = structure.map(type => pickWord(type));
+            let line = array.join(" ");
+            return line.charAt(0).toUpperCase() + line.slice(1) + ".";
+        }
+
+        function type(text) {
+            clearInterval(timer);
+            display.textContent = "";
+            let i = 0;
+
+            timer = setInterval(() => {
+                if (i < text.length) {
+                    display.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                }
+            }, 35); 
+        }
+
+        function refresh() {
+            const line = create();
+            type(line);
+        }
+
+        function buildStory() {
+            let totalWords = 0;
+            let html = "";
+
+            while(totalWords < 10050) {
+                let text = "";
+                let count = Math.floor(Math.random() * 8) + 8;
+
+                for (let s = 0; s < count; s++) {
+                    let sentence = create();
+                    text += sentence + " ";
+                    totalWords += sentence.split(" ").length;
+                }
+
+                html += `<p>${text.trim()}</p>`;
+            }
+            return html;
+        }
+
+        function updateCache() {
+            storyCache = buildStory();
+        }
+
+        const modal = document.getElementById("popup");
+        const btnOpen = document.getElementById("open");
+        const btnClose = document.getElementById("close");
+        const body = document.getElementById("story");
+
+        btnOpen.onclick = function() {
+            body.innerHTML = storyCache;
+            modal.style.display = "flex";
+        }
+
+        btnClose.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(e) {
+            if (e.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        refresh();
+        updateCache();
+
+        setInterval(refresh, 10000);
+        setInterval(updateCache, 180000);
+    </script>
+</body>
+</html>
+
